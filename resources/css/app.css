@@ -1,0 +1,1236 @@
+/* =========================================================
+   HIMANIKKA DESIGN SYSTEM
+   Tailwind CSS v4
+   ========================================================= */
+
+/* =========================================================
+   IMPORTS
+   ========================================================= */
+
+@import "tailwindcss";
+
+/* =========================================================
+   DARK MODE
+   Tailwind v4 secara default memakai varian `dark:` berbasis
+   media query (prefers-color-scheme). Project ini memakai toggle
+   manual, jadi varian dialihkan ke class `.dark` pada <html>.
+   ========================================================= */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================================================
+   THEME
+   ========================================================= */
+
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --color-brand-50: #eef2ff;
+    --color-brand-100: #e0e7ff;
+    --color-brand-200: #c7d2fe;
+    --color-brand-300: #a5b4fc;
+    --color-brand-400: #818cf8;
+    --color-brand-500: #6366f1;
+    --color-brand-600: #4f46e5;
+    --color-brand-700: #4338ca;
+    --color-brand-800: #3730a3;
+    --color-brand-900: #312e81;
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        font-feature-settings: "rlig" 1, "calt" 1;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased;
+        @apply dark:bg-slate-900 dark:text-slate-100;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    ::selection {
+        @apply bg-indigo-500 text-white;
+    }
+
+    *,
+    ::before,
+    ::after {
+        border-color: rgb(226 232 240 / 0.6);
+    }
+
+    .dark *,
+    .dark ::before,
+    .dark ::after {
+        border-color: rgb(51 65 85 / 0.6);
+    }
+}
+
+/* =========================================================
+   COMPONENTS
+   ========================================================= */
+
+@layer components {
+
+    /* =====================================================
+       CONTAINERS
+       ===================================================== */
+
+    .container-wide {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .container-page {
+        @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    }
+
+    /* =====================================================
+       SCROLLBAR
+       ===================================================== */
+
+    .scrollbar-thin {
+        scrollbar-width: thin;
+        scrollbar-color:
+            rgb(203 213 225)
+            rgb(241 245 249 / 0.5);
+    }
+
+    /*
+     * Alias dipakai panel notifikasi.
+     * Sengaja dibuat nama terpisah agar gaya scroll
+     * bisa berubah khusus untuk dropdown tanpa
+     * mempengaruhi komponen lain.
+     */
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color:
+            rgb(203 213 225)
+            transparent;
+        scroll-behavior: smooth;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgb(203 213 225 / 0.8);
+        border-radius: 9999px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgb(148 163 184);
+    }
+
+    .dark .custom-scrollbar {
+        scrollbar-color:
+            rgb(71 85 105)
+            transparent;
+    }
+
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgb(71 85 105 / 0.9);
+    }
+
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgb(100 116 139);
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: rgb(241 245 249 / 0.5);
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: rgb(203 213 225 / 0.7);
+        border-radius: 9999px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: rgb(148 163 184);
+    }
+
+    .dark .scrollbar-thin {
+        scrollbar-color:
+            rgb(71 85 105)
+            rgb(15 23 42 / 0.5);
+    }
+
+    .dark .scrollbar-thin::-webkit-scrollbar-track {
+        background: rgb(15 23 42 / 0.5);
+    }
+
+    .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: rgb(71 85 105 / 0.8);
+    }
+
+    .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: rgb(100 116 139);
+    }
+
+    /* =====================================================
+       SIDEBAR
+       ===================================================== */
+
+    .sidebar-container {
+        @apply scrollbar-thin fixed top-0 left-0 z-50 h-dvh w-72 max-w-[85vw] overflow-x-hidden overflow-y-auto;
+        @apply overscroll-contain;
+        @apply border-r border-slate-200/50;
+        @apply bg-white/95 backdrop-blur-xl;
+        @apply shadow-2xl shadow-black/5;
+        /* Hanya transform yang dianimasikan agar tidak ada layout-shift / jank */
+        transition:
+            transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+            box-shadow 0.3s ease;
+        will-change: transform;
+        @apply dark:border-slate-800/50;
+        @apply dark:bg-slate-900/95;
+        @apply dark:shadow-black/20;
+    }
+
+    .sidebar-link {
+        @apply relative flex items-center gap-3 overflow-hidden;
+        @apply rounded-xl px-4 py-2.5;
+        @apply text-slate-600 dark:text-slate-300;
+        @apply no-underline;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s cubic-bezier(0.32, 0.72, 0, 1),
+            box-shadow 0.2s ease;
+    }
+
+    .sidebar-link:hover {
+        @apply bg-gradient-to-r from-indigo-50 to-purple-50/50;
+        @apply text-indigo-700;
+        @apply shadow-sm shadow-indigo-500/5;
+        transform: translateX(4px);
+        @apply dark:from-indigo-950/40 dark:to-purple-950/30;
+        @apply dark:text-indigo-300;
+    }
+
+    .sidebar-link:active {
+        transform: translateX(4px) scale(0.98);
+    }
+
+    .sidebar-link span {
+        @apply text-slate-600 transition-colors duration-200;
+        @apply dark:text-slate-300;
+    }
+
+    .sidebar-link svg {
+        @apply h-5 w-5 shrink-0;
+        @apply text-slate-400;
+        @apply transition-all duration-200;
+        @apply dark:text-slate-500;
+    }
+
+    .sidebar-link:hover span,
+    .sidebar-link:hover svg {
+        @apply text-indigo-600 dark:text-indigo-400;
+    }
+
+    .sidebar-link:hover svg {
+        @apply scale-110;
+    }
+
+    /* =====================================================
+       SIDEBAR ACTIVE
+       ===================================================== */
+
+    .sidebar-link-active {
+        @apply relative;
+        @apply bg-gradient-to-r from-indigo-50 to-purple-50/80;
+        @apply font-semibold text-indigo-700;
+        @apply shadow-sm shadow-indigo-500/10;
+        @apply dark:from-indigo-950/50 dark:to-purple-950/30;
+        @apply dark:text-indigo-300;
+    }
+
+    .sidebar-link-active::before {
+        content: "";
+        @apply absolute top-1/2 left-0 h-5 w-1;
+        @apply -translate-y-1/2 rounded-r-full;
+        @apply bg-gradient-to-b from-indigo-500 to-purple-500;
+
+        animation: sidebarActivePulse 2s ease-in-out infinite;
+    }
+
+    .sidebar-link-active span {
+        @apply text-indigo-700 dark:text-indigo-300;
+    }
+
+    .sidebar-link-active svg {
+        @apply text-indigo-600 dark:text-indigo-400;
+    }
+
+    /* =====================================================
+       SIDEBAR COLOR VARIANTS
+       ===================================================== */
+
+    .sidebar-link[data-color="blue"]:hover svg {
+        @apply text-blue-500 dark:text-blue-400;
+    }
+
+    .sidebar-link[data-color="green"]:hover svg {
+        @apply text-green-500 dark:text-green-400;
+    }
+
+    .sidebar-link[data-color="emerald"]:hover svg {
+        @apply text-emerald-500 dark:text-emerald-400;
+    }
+
+    .sidebar-link[data-color="orange"]:hover svg {
+        @apply text-orange-500 dark:text-orange-400;
+    }
+
+    .sidebar-link[data-color="purple"]:hover svg {
+        @apply text-purple-500 dark:text-purple-400;
+    }
+
+    .sidebar-link[data-color="rose"]:hover svg {
+        @apply text-rose-500 dark:text-rose-400;
+    }
+
+    .sidebar-link[data-color="yellow"]:hover svg {
+        @apply text-yellow-500 dark:text-yellow-400;
+    }
+
+    .sidebar-link[data-color="red"]:hover svg {
+        @apply text-red-500 dark:text-red-400;
+    }
+
+    .sidebar-link[data-color="indigo"]:hover svg {
+        @apply text-indigo-500 dark:text-indigo-400;
+    }
+
+    .sidebar-link[data-color="cyan"]:hover svg {
+        @apply text-cyan-500 dark:text-cyan-400;
+    }
+
+    .sidebar-section-title {
+        @apply mb-3 px-2;
+        @apply text-xs font-bold uppercase tracking-[0.15em];
+        @apply text-slate-400 dark:text-slate-500;
+    }
+
+    /* =====================================================
+       PROFILE LINK
+       ===================================================== */
+
+    /*
+     * IMPORTANT:
+     * Tidak menggunakan @apply sidebar-link.
+     * Tailwind v4 tidak memperlakukan custom component
+     * sebagai utility yang bisa diwariskan menggunakan @apply.
+     */
+
+    .sidebar-link-profile {
+        @apply relative flex items-center gap-3 overflow-hidden;
+        @apply rounded-xl px-4 py-2.5;
+        @apply no-underline transition-all duration-200;
+
+        @apply border border-cyan-200/40;
+        @apply bg-gradient-to-r from-cyan-50 to-blue-50/50;
+        @apply text-cyan-700;
+
+        @apply dark:border-cyan-800/30;
+        @apply dark:from-cyan-950/30 dark:to-blue-950/20;
+        @apply dark:text-cyan-300;
+    }
+
+    .sidebar-link-profile:hover {
+        @apply bg-gradient-to-r from-cyan-100 to-blue-100/50;
+        @apply shadow-sm shadow-cyan-500/10;
+        @apply dark:from-cyan-950/50 dark:to-blue-950/40;
+    }
+
+    .sidebar-link-profile span,
+    .sidebar-link-profile svg {
+        @apply text-cyan-700 dark:text-cyan-300;
+    }
+
+    .sidebar-link-profile:hover svg {
+        @apply scale-110;
+    }
+
+    /* =====================================================
+       LOGOUT LINK
+       ===================================================== */
+
+    .sidebar-link-logout {
+        @apply relative flex items-center gap-3 overflow-hidden;
+        @apply rounded-xl px-4 py-2.5;
+        @apply no-underline transition-all duration-200;
+
+        @apply border border-rose-200/40;
+        @apply bg-gradient-to-r from-rose-50 to-red-50/50;
+        @apply text-rose-600;
+
+        @apply dark:border-rose-800/30;
+        @apply dark:from-rose-950/20 dark:to-red-950/10;
+        @apply dark:text-rose-400;
+    }
+
+    .sidebar-link-logout:hover {
+        @apply bg-gradient-to-r from-rose-100 to-red-100/50;
+        @apply shadow-sm shadow-rose-500/10;
+        @apply dark:from-rose-950/50 dark:to-red-950/30;
+    }
+
+    .sidebar-link-logout span,
+    .sidebar-link-logout svg {
+        @apply text-rose-600 dark:text-rose-400;
+    }
+
+    .sidebar-link-logout:hover svg {
+        @apply scale-110;
+    }
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    .app-header {
+        @apply sticky top-0 z-40 w-full;
+        @apply border-b border-slate-200/60;
+        @apply bg-white/80 backdrop-blur-xl;
+        transition:
+            box-shadow 0.3s ease,
+            background-color 0.3s ease,
+            border-color 0.3s ease;
+        @apply dark:border-slate-800/60;
+        @apply dark:bg-slate-900/90;
+        @apply dark:shadow-black/20;
+    }
+
+    /* Status saat halaman di-scroll: header "terangkat" */
+    .app-header.is-scrolled {
+        @apply shadow-lg shadow-black/10;
+        border-color: rgb(226 232 240 / 0.9);
+        background-color: rgb(255 255 255 / 0.92);
+    }
+
+    .dark .app-header.is-scrolled {
+        background-color: rgb(15 23 42 / 0.92);
+        border-color: rgb(51 65 85 / 0.9);
+    }
+
+    .header-title {
+        @apply bg-gradient-to-r from-indigo-600 to-purple-600;
+        @apply bg-clip-text text-lg font-bold tracking-tight;
+        @apply text-transparent;
+        @apply dark:from-indigo-400 dark:to-purple-400;
+    }
+
+    .header-subtitle {
+        @apply text-xs font-medium;
+        @apply text-slate-500 dark:text-slate-400;
+    }
+
+    /* =====================================================
+       NAVBAR
+       ===================================================== */
+
+    .navbar-link {
+        @apply inline-flex items-center gap-2;
+        @apply rounded-xl px-3 py-2;
+        @apply text-sm font-medium;
+        @apply text-slate-700 dark:text-slate-200;
+        @apply transition-all duration-200;
+    }
+
+    .navbar-link:hover {
+        @apply bg-gradient-to-r from-indigo-50 to-purple-50/50;
+        @apply text-indigo-700;
+        @apply dark:from-indigo-950/40 dark:to-purple-950/30;
+        @apply dark:text-indigo-300;
+    }
+
+    .navbar-link svg {
+        @apply h-4 w-4;
+        @apply text-slate-500 dark:text-slate-400;
+        @apply transition-all duration-200;
+    }
+
+    .navbar-link:hover svg {
+        @apply scale-110 text-indigo-600;
+        @apply dark:text-indigo-400;
+    }
+
+    .navbar-link-active {
+        @apply border border-indigo-200/50;
+        @apply bg-gradient-to-r from-indigo-50 to-purple-50/80;
+        @apply font-semibold text-indigo-700;
+        @apply dark:border-indigo-800/40;
+        @apply dark:from-indigo-950/50 dark:to-purple-950/30;
+        @apply dark:text-indigo-300;
+    }
+
+    .navbar-icon {
+        @apply relative rounded-xl p-2;
+        @apply text-slate-600 dark:text-slate-300;
+        @apply transition-all duration-200;
+    }
+
+    .navbar-icon:hover {
+        @apply bg-gradient-to-br from-indigo-50 to-purple-50/50;
+        @apply text-indigo-600;
+        @apply shadow-sm shadow-indigo-500/5;
+        @apply dark:from-indigo-950/40 dark:to-purple-950/30;
+        @apply dark:text-indigo-400;
+    }
+
+    .navbar-icon:hover svg {
+        @apply scale-110;
+    }
+
+    .navbar-auth {
+        @apply flex items-center gap-2;
+        @apply rounded-xl px-2 py-1.5;
+        @apply text-slate-700 dark:text-slate-200;
+        @apply transition-all duration-200;
+    }
+
+    .navbar-auth:hover {
+        @apply bg-gradient-to-r from-indigo-50 to-purple-50/50;
+        @apply text-indigo-700 shadow-sm;
+        @apply dark:from-indigo-950/40 dark:to-purple-950/30;
+        @apply dark:text-indigo-300;
+    }
+
+    .navbar-btn {
+        @apply rounded-xl;
+        @apply bg-gradient-to-r from-indigo-500 to-purple-600;
+        @apply px-4 py-2;
+        @apply text-xs font-semibold text-white;
+        @apply shadow-lg shadow-indigo-500/20;
+        @apply transition-all duration-200;
+    }
+
+    .navbar-btn:hover {
+        @apply scale-105;
+        @apply from-indigo-600 to-purple-700;
+        @apply shadow-xl shadow-indigo-500/30;
+    }
+
+    .navbar-logo {
+        @apply flex items-center gap-3;
+        @apply text-lg font-black;
+        @apply text-slate-900 dark:text-white;
+        @apply transition-all duration-200;
+    }
+
+    .navbar-logo:hover {
+        @apply text-indigo-600 dark:text-indigo-400;
+    }
+
+    .navbar-logo img {
+        @apply transition-all duration-300;
+    }
+
+    .navbar-logo:hover img {
+        @apply scale-110;
+        @apply shadow-lg shadow-indigo-500/20;
+    }
+
+    /* =====================================================
+       MAIN CONTENT
+       ===================================================== */
+
+    .main-content {
+        @apply min-h-screen;
+        @apply bg-gradient-to-br from-slate-50 via-white to-slate-50;
+        @apply dark:from-slate-900 dark:via-slate-800 dark:to-slate-900;
+    }
+
+    .content-wrapper {
+        @apply transition-all duration-300;
+        @apply lg:ml-72;
+        @apply py-8 lg:py-10;
+        @apply mx-auto w-full max-w-7xl;
+        @apply px-4 sm:px-6 lg:px-8;
+    }
+
+    .page-section {
+        @apply mb-8;
+    }
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
+    .card {
+        @apply rounded-3xl p-6 sm:p-8;
+        @apply border border-slate-200/60;
+        @apply bg-white/80 backdrop-blur-xl;
+        @apply shadow-xl shadow-black/10;
+        transition:
+            box-shadow 0.3s ease,
+            transform 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+            background-color 0.3s ease,
+            border-color 0.3s ease;
+        @apply dark:border-slate-700/60;
+        @apply dark:bg-slate-800/80;
+        @apply dark:shadow-black/25;
+    }
+
+    .card:hover {
+        @apply shadow-2xl shadow-black/15;
+        transform: translateY(-2px);
+        @apply dark:shadow-black/30;
+    }
+
+    .card-header {
+        @apply mb-6;
+        @apply border-b border-slate-200/50;
+        @apply pb-6;
+        @apply dark:border-slate-700/50;
+    }
+
+    .card-title {
+        @apply text-2xl font-bold;
+        @apply text-slate-900 sm:text-3xl;
+        @apply dark:text-slate-100;
+    }
+
+    .card-subtitle {
+        @apply mt-2;
+        @apply text-slate-600 dark:text-slate-400;
+    }
+
+    /* =====================================================
+       STATS
+       ===================================================== */
+
+    .stats-grid {
+        @apply mb-8 grid grid-cols-1 gap-6;
+        @apply md:grid-cols-2 lg:grid-cols-4;
+    }
+
+    .stat-card {
+        @apply rounded-3xl p-6;
+        @apply border border-slate-200/60;
+        @apply bg-white/80 backdrop-blur-xl;
+        @apply shadow-xl shadow-black/10;
+        transition:
+            box-shadow 0.3s ease,
+            transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+            background-color 0.3s ease,
+            border-color 0.3s ease;
+        @apply dark:border-slate-700/60;
+        @apply dark:bg-slate-800/80;
+        @apply dark:shadow-black/25;
+    }
+
+    .stat-card:hover {
+        @apply -translate-y-1.5;
+        @apply shadow-2xl shadow-black/15;
+        @apply dark:shadow-black/30;
+    }
+
+    /* =====================================================
+       TABLE
+       ===================================================== */
+
+    .table-container {
+        @apply scrollbar-thin overflow-x-auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+    }
+
+    .table-himanikka {
+        @apply w-full text-sm;
+        @apply text-slate-700 dark:text-slate-300;
+        /* Di layar kecil tabel tetap terbaca & di-scroll horizontal,
+           bukan diperas sampai teks saling tumpang tindih. */
+        min-width: 40rem;
+    }
+
+    .table-himanikka thead th {
+        @apply sticky top-0 z-10;
+        @apply border-b border-slate-200;
+        @apply bg-slate-50/50;
+        @apply px-6 py-4;
+        @apply font-semibold text-slate-900;
+        @apply dark:border-slate-700;
+        @apply dark:bg-slate-800/50;
+        @apply dark:text-slate-100;
+    }
+
+    .table-himanikka tbody td {
+        @apply border-b border-slate-200/50;
+        @apply px-6 py-4;
+        @apply dark:border-slate-700/50;
+    }
+
+    .table-himanikka tbody tr {
+        @apply transition-colors;
+    }
+
+    .table-himanikka tbody tr:hover {
+        @apply bg-slate-50/60;
+        @apply dark:bg-slate-800/30;
+    }
+
+    /* =====================================================
+       BUTTONS
+       ===================================================== */
+
+    .btn-primary {
+        @apply inline-flex items-center gap-2;
+        @apply rounded-2xl;
+        @apply bg-gradient-to-r from-indigo-600 to-purple-600;
+        @apply px-6 py-3;
+        @apply text-sm font-semibold text-white;
+        @apply shadow-lg;
+        @apply transition-all duration-200;
+        @apply dark:from-indigo-500 dark:to-purple-500;
+    }
+
+    .btn-primary:hover {
+        @apply from-indigo-700 to-purple-700;
+        @apply shadow-xl;
+        @apply dark:from-indigo-600 dark:to-purple-600;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center gap-2;
+        @apply rounded-2xl;
+        @apply border border-slate-300;
+        @apply bg-white;
+        @apply px-6 py-3;
+        @apply text-sm font-semibold text-slate-700;
+        @apply shadow-sm;
+        @apply transition-all duration-200;
+        @apply dark:border-slate-700;
+        @apply dark:bg-slate-800;
+        @apply dark:text-slate-200;
+    }
+
+    .btn-secondary:hover {
+        @apply bg-slate-50 shadow-md;
+        @apply dark:bg-slate-700;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center gap-2;
+        @apply rounded-2xl;
+        @apply bg-rose-600;
+        @apply px-6 py-3;
+        @apply text-sm font-semibold text-white;
+        @apply shadow-lg;
+        @apply transition-all duration-200;
+    }
+
+    .btn-danger:hover {
+        @apply bg-rose-700 shadow-xl;
+    }
+
+    .btn-icon {
+        @apply inline-flex h-10 w-10 items-center justify-center;
+        @apply rounded-xl;
+        @apply border border-slate-200/60;
+        @apply bg-white/80;
+        @apply text-slate-700;
+        @apply transition-all duration-200;
+        @apply dark:border-slate-700/60;
+        @apply dark:bg-slate-800/80;
+        @apply dark:text-slate-200;
+    }
+
+    .btn-icon:hover {
+        @apply bg-slate-100;
+        @apply dark:bg-slate-700/70;
+    }
+
+    /* =====================================================
+       FORMS
+       ===================================================== */
+
+    .form-input {
+        @apply w-full rounded-xl;
+        @apply border border-slate-300;
+        @apply bg-white px-4 py-3;
+        @apply text-slate-900;
+        @apply transition-all duration-200;
+        @apply placeholder:text-slate-500;
+        @apply dark:border-slate-700;
+        @apply dark:bg-slate-800;
+        @apply dark:text-slate-100;
+        @apply dark:placeholder:text-slate-400;
+    }
+
+    .form-input:focus {
+        @apply border-indigo-500;
+        @apply outline-none;
+        @apply ring-4 ring-indigo-500/20;
+    }
+
+    .form-label {
+        @apply mb-1.5 block;
+        @apply text-sm font-medium;
+        @apply text-slate-700 dark:text-slate-300;
+    }
+
+    .form-help {
+        @apply mt-2 text-xs;
+        @apply text-slate-500 dark:text-slate-400;
+    }
+
+    .form-error {
+        @apply mt-2 text-xs font-medium;
+        @apply text-rose-600 dark:text-rose-400;
+    }
+
+    /* =====================================================
+       BADGES
+       ===================================================== */
+
+    /*
+     * Base badge.
+     */
+
+    .badge {
+        @apply inline-flex items-center;
+        @apply rounded-full;
+        @apply px-2.5 py-1;
+        @apply text-[11px] font-semibold;
+    }
+
+    /*
+     * IMPORTANT:
+     * Variant badge TIDAK menggunakan:
+     *
+     * @apply badge;
+     *
+     * Karena badge adalah custom class.
+     */
+
+    .badge-success {
+        @apply inline-flex items-center rounded-full;
+        @apply px-2.5 py-1 text-[11px] font-semibold;
+        @apply bg-emerald-100 text-emerald-700;
+        @apply dark:bg-emerald-500/15 dark:text-emerald-300;
+    }
+
+    .badge-warning {
+        @apply inline-flex items-center rounded-full;
+        @apply px-2.5 py-1 text-[11px] font-semibold;
+        @apply bg-amber-100 text-amber-700;
+        @apply dark:bg-amber-500/15 dark:text-amber-300;
+    }
+
+    .badge-danger {
+        @apply inline-flex items-center rounded-full;
+        @apply px-2.5 py-1 text-[11px] font-semibold;
+        @apply bg-rose-100 text-rose-700;
+        @apply dark:bg-rose-500/15 dark:text-rose-300;
+    }
+
+    .badge-info {
+        @apply inline-flex items-center rounded-full;
+        @apply px-2.5 py-1 text-[11px] font-semibold;
+        @apply bg-blue-100 text-blue-700;
+        @apply dark:bg-blue-500/15 dark:text-blue-300;
+    }
+
+    /* =====================================================
+       UTILITY COMPONENTS
+       ===================================================== */
+
+    .sidebar-open {
+        @apply lg:ml-72;
+    }
+
+    .sidebar-closed {
+        @apply lg:ml-0;
+    }
+
+    .section-title {
+        @apply text-2xl font-bold;
+        @apply text-slate-900 sm:text-3xl;
+        @apply dark:text-slate-100;
+    }
+
+    .section-description {
+        @apply mt-2;
+        @apply text-slate-600 dark:text-slate-400;
+    }
+
+    .page-hero {
+        @apply overflow-hidden rounded-3xl;
+        @apply border border-slate-200/60;
+        @apply bg-gradient-to-r from-indigo-600 to-teal-500;
+        @apply text-white shadow-xl;
+        @apply dark:border-slate-700/60;
+    }
+
+    /* =====================================================
+       FLASH
+       ===================================================== */
+
+    .flash-success {
+        @apply rounded-2xl;
+        @apply border border-emerald-200;
+        @apply bg-emerald-50 p-4;
+        @apply text-emerald-800 shadow-md;
+        @apply dark:border-emerald-800;
+        @apply dark:bg-emerald-900/60;
+        @apply dark:text-emerald-200;
+    }
+
+    .flash-error {
+        @apply rounded-2xl;
+        @apply border border-red-200;
+        @apply bg-red-50 p-4;
+        @apply text-red-800 shadow-md;
+        @apply dark:border-red-800;
+        @apply dark:bg-red-900/60;
+        @apply dark:text-red-200;
+    }
+
+    /* =====================================================
+       MODAL
+       ===================================================== */
+
+    .modal-backdrop {
+        @apply fixed inset-0 z-50;
+        @apply flex items-center justify-center;
+        @apply bg-black/60 px-4 py-6;
+        @apply backdrop-blur-sm;
+    }
+
+    .modal-container {
+        @apply flex max-h-[90vh] w-full max-w-2xl;
+        @apply flex-col overflow-hidden rounded-2xl;
+        @apply bg-white shadow-2xl;
+        @apply dark:bg-slate-900;
+    }
+
+    .modal-header {
+        @apply shrink-0;
+        @apply border-b border-slate-200;
+        @apply px-6 py-5;
+        @apply dark:border-slate-800;
+    }
+
+    .modal-body {
+        @apply flex-1 overflow-y-auto;
+        @apply px-6 py-6;
+    }
+
+    .modal-footer {
+        @apply flex items-center justify-end gap-3;
+        @apply border-t border-slate-200/70;
+        @apply px-6 py-4;
+        @apply dark:border-slate-800/70;
+    }
+
+    /* =====================================================
+       SLIDER
+       ===================================================== */
+
+    .slide-dot {
+        @apply h-2 cursor-pointer rounded-full;
+        @apply transition-all duration-300;
+    }
+
+    .slide-dot-active {
+        @apply w-8 bg-indigo-600;
+    }
+
+    .slide-dot-inactive {
+        @apply w-2 bg-slate-300;
+        @apply dark:bg-slate-600;
+    }
+
+    .slide-dot-inactive:hover {
+        @apply bg-slate-400;
+        @apply dark:bg-slate-500;
+    }
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes sidebarActivePulse {
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 4px rgb(99 102 241 / 40%);
+    }
+
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 8px rgb(99 102 241 / 60%);
+    }
+}
+
+/* =========================================================
+   NAVBAR (landing / mahasiswa / guest)
+   ========================================================= */
+
+.navbar {
+    transition:
+        box-shadow 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.navbar.is-scrolled {
+    box-shadow: 0 10px 30px -12px rgb(15 23 42 / 0.25);
+    border-bottom-color: rgb(226 232 240 / 0.8);
+}
+
+.dark .navbar.is-scrolled {
+    box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.6);
+    border-bottom-color: rgb(51 65 85 / 0.8);
+}
+
+/* =========================================================
+   NOTIFICATION PANEL & ITEMS
+   ========================================================= */
+
+.notif-panel {
+    transform-origin: top right;
+}
+
+.notif-item {
+    animation: notifItemIn 0.35s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes notifItemIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Titik "belum dibaca" dengan denyut lembut */
+.notif-dot-pulse::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    border: 2px solid rgb(99 102 241 / 50%);
+    animation: notifDotPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes notifDotPing {
+    0% {
+        transform: scale(0.7);
+        opacity: 0.8;
+    }
+
+    80%,
+    100% {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+/* Badge hitung notifikasi */
+.notif-badge-pop {
+    animation: badgePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes badgePop {
+    from {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   SKELETON LOADING
+   ========================================================= */
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: rgb(226 232 240 / 0.7);
+    border-radius: 0.75rem;
+}
+
+.dark .skeleton {
+    background-color: rgb(51 65 85 / 0.6);
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgb(255 255 255 / 0.45),
+        transparent
+    );
+    animation: skeletonShimmer 1.4s infinite;
+}
+
+.dark .skeleton::after {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgb(255 255 255 / 0.08),
+        transparent
+    );
+}
+
+@keyframes skeletonShimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* =========================================================
+   PAGE / CONTENT ENTRANCE
+   ========================================================= */
+
+.page-enter {
+    animation: pageEnter 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Kartu / panel masuk berurutan (stagger) */
+.stagger-in > * {
+    animation: pageEnter 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.stagger-in > *:nth-child(1) { animation-delay: 0.03s; }
+.stagger-in > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger-in > *:nth-child(3) { animation-delay: 0.13s; }
+.stagger-in > *:nth-child(4) { animation-delay: 0.18s; }
+.stagger-in > *:nth-child(5) { animation-delay: 0.23s; }
+.stagger-in > *:nth-child(6) { animation-delay: 0.28s; }
+.stagger-in > *:nth-child(7) { animation-delay: 0.33s; }
+.stagger-in > *:nth-child(8) { animation-delay: 0.38s; }
+
+/* =========================================================
+   INTERACTION POLISH
+   ========================================================= */
+
+/* Feedback tekan untuk semua tombol interaktif */
+button:not(:disabled),
+[role="button"] {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-danger:active,
+.btn-icon:active,
+.navbar-btn:active {
+    transform: scale(0.97);
+}
+
+/* Fokus terlihat untuk aksesibilitas keyboard */
+:focus-visible {
+    outline: 2px solid rgb(99 102 241 / 0.7);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+}
+
+/* Dropdown menu (profil, dsb.) */
+.dropdown-panel {
+    transform-origin: top right;
+    animation: dropdownIn 0.18s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes dropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =========================================================
+   THEME TRANSITION
+   Transisi halus hanya saat theme diganti (class .dark
+   ditambah/dihilangkan). Dipasang sementara oleh JS lewat
+   class `theme-anim` di <html>, sehingga halaman awal tetap
+   tampil langsung tanpa animasi (tanpa berkedip).
+   ========================================================= */
+
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+    transition-property: background-color, border-color, color, fill,
+        stroke, box-shadow, outline-color, filter, transform, opacity !important;
+    transition-duration: 0.35s !important;
+    transition-timing-function: ease !important;
+    transition-delay: 0s !important;
+}
+
+/* =========================================================
+   REDUCED MOTION
+   Hormati preferensi pengguna sistem.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Transisi theme tidak perlu berjalan sama sekali */
+    html.theme-anim,
+    html.theme-anim *,
+    html.theme-anim *::before,
+    html.theme-anim *::after {
+        transition: none !important;
+    }
+}

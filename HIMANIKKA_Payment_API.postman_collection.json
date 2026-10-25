@@ -1,0 +1,425 @@
+{
+  "info": {
+    "name": "HIMANIKKA Payment API",
+    "description": "Collection untuk test API Pembayaran HIMANIKKA.\n\n## Flow Testing:\n1. 🧪 Test API — Cek API hidup\n2. 🔐 Login — Ambil Sanctum token\n3. 👤 Get User — Cek data user login\n4. 💳 Snap Token — Generate Midtrans token\n5. 💳 Store Payment — Simpan pembayaran\n6. 🔍 Check Status — Cek status pembayaran\n7. 🚪 Logout — Hapus token\n\n## Cara Pakai:\n1. Import ke Postman\n2. Set BASE_URL = http://127.0.0.1:8000\n3. Jalankan Login → token otomatis tersimpan\n4. Semua request berikutnya otomatis pakai token",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "PENDAFTARAN_ID",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🧪 Test API",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/test",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "test"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('API is working', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.json().message).to.equal('API is working!');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔐 Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@himanikka.com\",\n  \"password\": \"password\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/login",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.test('Login successful', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(jsonData.token).to.not.be.undefined;",
+              "});",
+              "if (jsonData.token) {",
+              "    pm.collectionVariables.set('TOKEN', jsonData.token);",
+              "    console.log('✅ Token saved: ' + jsonData.token.substring(0, 20) + '...');",
+              "    console.log('User: ' + jsonData.user.name + ' (' + jsonData.user.role + ')');",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔐 Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@himanikka.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"NIM\": \"12345678\",\n  \"role_id\": 3\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/register",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "register"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Register successful', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    console.log('✅ Token: ' + jsonData.token.substring(0, 20) + '...');",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Auth - Get User",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/user",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "user"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Get user data', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.name).to.not.be.undefined;",
+              "    pm.expect(jsonData.email).to.not.be.undefined;",
+              "    console.log('User: ' + jsonData.name + ' (' + jsonData.role + ')');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Payment - Snap Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pendaftaran_id\": {{PENDAFTARAN_ID}}\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/payment/snap-token",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "payment", "snap-token"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Snap token generated', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.snap_token).to.not.be.undefined;",
+              "    console.log('Order ID: ' + jsonData.order_id);",
+              "    console.log('Amount: Rp ' + jsonData.gross_amount.toLocaleString('id-ID'));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Payment - Store (Cash)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pendaftaran_id\": {{PENDAFTARAN_ID}},\n  \"jenis\": \"cash\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/payment/store",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "payment", "store"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Payment stored', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    console.log('Status: ' + jsonData.message);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Payment - Store (Transfer)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "pendaftaran_id", "value": "{{PENDAFTARAN_ID}}", "type": "text" },
+            { "key": "jenis", "value": "kredit", "type": "text" },
+            { "key": "bukti_pembayaran", "type": "file" }
+          ]
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/payment/store",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "payment", "store"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Payment stored', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    console.log('Status: ' + jsonData.message);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Payment - Check Status",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/payment/status/{{PENDAFTARAN_ID}}",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "payment", "status", "{{PENDAFTARAN_ID}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status retrieved', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    console.log('Pendaftaran #' + jsonData.pendaftaran_id + ': ' + jsonData.status_pendaftaran);",
+              "    if (jsonData.pembayaran) {",
+              "        console.log('Pembayaran: ' + jsonData.pembayaran.status);",
+              "    }",
+              "    if (jsonData.biaya) {",
+              "        console.log('Biaya: ' + jsonData.biaya.formatted);",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Payment - Midtrans Webhook",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Basic U0ItTWlkLXNlcnZlci1rZXk6" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transaction_status\": \"capture\",\n  \"fraud_status\": \"accept\",\n  \"order_id\": \"PEM-1-1234567890\",\n  \"payment_type\": \"bank_transfer\",\n  \"gross_amount\": \"50000\",\n  \"transaction_time\": \"2026-08-21 10:00:00\",\n  \"bank\": \"bca\",\n  \"va_number\": \"1234567890\",\n  \"status_code\": \"200\",\n  \"status_message\": \"Success, transaction is found\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/payment/midtrans-notification",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "payment", "midtrans-notification"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Webhook processed', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚪 Auth - Logout",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{BASE_URL}}/api/logout",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "logout"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Logout successful', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    console.log(jsonData.message);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Error - No Token",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/user",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "user"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Returns 401', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "auth": { "type": "noauth" }
+    },
+    {
+      "name": "❌ Error - Invalid Token",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer invalid-token-abc123" }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}/api/user",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "user"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Returns 401', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Error - Wrong Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@himanikka.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/login",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Returns 422', function () {",
+              "    pm.response.to.have.status(422);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
